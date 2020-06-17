@@ -131,10 +131,10 @@ Stream<dynamic> _startDownload(
 
     updateStatus('Initializiging ffmpeg');
     final FlutterFFmpeg ffmpeg = new FlutterFFmpeg();
-    final Directory directory = await getTemporaryDirectory();
+    final Directory tmpDirectory = await getTemporaryDirectory();
+    // final Directory docDirectory = await getApplicationDocumentsDirectory();
 
-    String path = directory.path;
-
+    String path = tmpDirectory.path;
     String fileName = 'temp.mp4';
 
     debugPrint('Path: ' + path);
@@ -154,6 +154,7 @@ Stream<dynamic> _startDownload(
 
     int code =
         await ffmpeg.execute('-y -i $dashUrl -codec copy $path/$fileName');
+    // await ffmpeg.execute('-i $path/$fileName -vf -ss 00:00:00 -vframes 1 ');
     if (code == 0) {
       debugPrint('success');
       debugPrint('saving to $path/$fileName');

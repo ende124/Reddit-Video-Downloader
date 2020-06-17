@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:reddit_video_downloader/actions/actions.dart';
 import 'package:reddit_video_downloader/effects/effects.dart';
 import 'package:reddit_video_downloader/models/app_state.dart';
 import 'package:reddit_video_downloader/reduers/app_state_reducer.dart';
@@ -26,6 +27,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    void switchTab(int num) {
+      StoreProvider.of<AppState>(context)
+          .dispatch(new SwitchTabAction(tabNum: num));
+    }
+
+    List<Widget> _widgets = <Widget>[
+      Home()
+    ];
+
     return StoreProvider<AppState>(
       store: store,
       child: MaterialApp(
@@ -38,27 +48,47 @@ class MyApp extends StatelessWidget {
               headline5: TextStyle(fontSize: 21),
             ),
             buttonTheme: ButtonThemeData(
-                buttonColor: Colors.white,
-                textTheme: ButtonTextTheme.primary,
-                shape: RoundedRectangleBorder(
+              buttonColor: Colors.white,
+              textTheme: ButtonTextTheme.primary,
+              shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(100),
                   side: BorderSide(color: Colors.blue)
-                ),
+              ),
             ),
             appBarTheme: AppBarTheme(
               color: Colors.white,
             )),
-        home: Scaffold(
-            backgroundColor: Colors.white,
-            appBar: AppBar(
-              title: Text('Video Downloader for Reddit'),
-              backgroundColor: Colors.white,
-              textTheme: TextTheme(
-                headline6: TextStyle(color: Colors.black),
-              ),
-              elevation: 0,
-            ),
-            body: Home()),
+        home: StoreConnector<AppState, int>(
+            converter: (Store<AppState> store) => store.state.appState.pageNum,
+            builder: (context, int tabIndex) => Scaffold(
+                backgroundColor: Colors.white,
+                appBar: AppBar(
+                  title: Text('Video Downloader for Reddit'),
+                  backgroundColor: Colors.white,
+                  textTheme: TextTheme(
+                    headline6: TextStyle(color: Colors.black),
+                  ),
+                  elevation: 0,
+                ),
+                body: _widgets.elementAt(tabIndex),
+                bottomNavigationBar: BottomNavigationBar(
+                  items: const <BottomNavigationBarItem>[
+                    BottomNavigationBarItem(
+                        icon: Icon(Icons.cloud_download),
+                        title: Text('Download')
+                    ),
+                    BottomNavigationBarItem(
+                        icon: Icon(Icons.image),
+                        title: Text('Saved')
+                    ),
+
+                  ],
+                  currentIndex: tabIndex,
+                  onTap: switchTab,
+                  selectedItemColor: Colors.blue,
+                )
+            )
+        ),
       ),
     );
   }

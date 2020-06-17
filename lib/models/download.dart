@@ -8,7 +8,7 @@ class Download {
   const Download({this.isDownloading, this.status});
 
   Download copyWith({bool isDownloading, String status}) {
-    return Download(
+    return new Download(
       isDownloading: isDownloading ?? this.isDownloading,
       status: status ?? this.status,
     );

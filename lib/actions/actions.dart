@@ -46,3 +46,16 @@ class OpenDialogAction {
     return 'OpenDialogAction{title: $title, body: $body}';
   }
 }
+
+class SwitchTabAction {
+  final int tabNum;
+
+  SwitchTabAction({
+    @required this.tabNum
+  });
+
+  @override
+  String toString() {
+    return 'SwitchTabAction(tabNum: $tabNum';
+  }
+}
